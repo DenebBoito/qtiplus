@@ -2,9 +2,11 @@
 
 This repository contains the Matab implementation of the routines used in the paper [Q-space trajectory imaging with positivity constraints (QTI+)](https://www.sciencedirect.com/science/article/pii/S1053811921004754) by Herberthson et. al.  Here you will find information regarding the installation and basic usage of the library. For details regarding the methods, and for their nomenclature, we refer you to the paper.
 
+In what follows, you will find how to quickly start using the software for analysing your data. For more details and information, and for an example on how to use the softare, please consult the user guide.
 
 
-# How to start
+
+# Quick start
 
 ## Installing CVX
 In order to use the routines in this library, [CVX](http://cvxr.com/cvx/) needs to be installed. CVX is free to download and install, and comes with a few free solvers that can be readily used upon installation. If CVX is not already installed, please visit the [download page](http://cvxr.com/cvx/download/) and download the option that suits you. Please consult the [installation page](http://cvxr.com/cvx/download/) for instruction on how to install CVX on your machine.
@@ -35,19 +37,19 @@ The function **qti_plus** fit is the main function in the package and is the one
 
 With this function call, the QTI model is fitted to the data using SDPdc, i.e. the positivity constraints on the mean Diffusion and on the Covariance tensor are enforced using Semidefinite Programming. By default, the function will try to run operations in parallel, and will send 50 voxels at a time to the SDP solver.
 
-If a brain mask is available, it can be passed as input in the following way
+If you have a mask available, it can be passed as input in the following way
 
 ```matlab
 [model, invariants] = qtiplus_fit(data,btensors,'mask',mask)
 ```
 
-If a mask is not passed as input, a simple one will be created to avoid unnecessary computations.
+If a mask is not passed as input, a simple one will be created to avoid unnecessary computations. Therefore, in case it is desired to have the computations performed over all voxels in the dataset, it is recommended to pass the correspective mask to the software.
 
 The fit returns 2 variables: a 4D matrix, here called *model*, containing the QTI model parameters, in the following fashion:
 
-- Model(x, y ,z, 1)      = S0, non diffusion weighted signal, in arbitrary units
-- Model(x, y, z, 2:7)   = Diffusion tensor unique elements (6), in m^2/s
-- Model(x, y, z, 8:28) = Covariance tensor unique elements (21), in m^4/s^2
+- model(x, y ,z, 1)      = S0, non diffusion weighted signal, in arbitrary units
+- model(x, y, z, 2:7)   = Diffusion tensor unique elements (6), in m^2/s
+- model(x, y, z, 8:28) = Covariance tensor unique elements (21), in m^4/s^2
 
 and a structure, here called *invariants*, containing the scalar maps derived from the estimated quantities. For the nomenclature of the various scalar, see the paper from [Westin et. al](https://pubmed.ncbi.nlm.nih.gov/26923372/).  The Mean Diffusivity MD is returned in um^2/ms, while S0 is returned in arbitrary units.
 
@@ -55,14 +57,9 @@ and a structure, here called *invariants*, containing the scalar maps derived fr
 
 ## Optional Parameters
 
-
-
-Optional parameters can be passed to the function using key-value pairs.
+Optional parameters can be passed to the function using key-value pairs. For more details, please consult the user guide.
 
 Available options concern the choice of SDP solver (*solver*), which of the fitting routines to employ (*pipeline*), the number of voxels to be fitted simultaneously (*nvox*), whether or not to use parallel computations (*parallel*), and possible indexes of measurements to exclude from the fitting (*ind*).
-
-### solver
-As mentioned above, we suggest using Mosek over SDPT3. This mostly concerns speed performance, as the final results should not depend on the adopted solver. By default, QTI+ will try to use Mosek, and if not available will resource to SDPT3. However, should you have both solvers available and still prefer SDPT3 over Mosek, there is chance to enforce this choice via the keyword *solver*.
 
 ### pipeline
 The pipeline options are constructed using SDPdc, NLLSdc, m)-check, and SDPdcm as building blocks. Pre-constructed pipelines can be identified via integers as follows:
@@ -84,9 +81,13 @@ will fit the data with SDPdc, NLLSdc, m)-check, and SDPdcm.
 
 As default, only SDPdc is performed. This choice is dictated by the excellent results obtainable with this step alone, and by computational considerations.
 
+### solver
 
-### nvox
-The key word *nvox* allows the user to decide how many voxels to process at a time with the *CVX* solver. From our experience, 50 is about the right choice to promote a significant computational speed increase. Higher values for *nvox* might be counterproductive and lead to slow fitting.
+As mentioned above, we suggest using Mosek over SDPT3. This mostly concerns speed performance, as the final results should not depend on the adopted solver. By default, QTI+ will try to use Mosek, and if not available will resource to SDPT3. However, should you have both solvers available and still prefer SDPT3 over Mosek, there is chance to enforce this choice via the keyword *solver* in the following fashion:
+
+```matlab
+[model, invariants] = qtiplus_fit(data,btensors,'solver','sdpt3')
+```
 
 ### index
 With the key word *index* the user can decide whether to exclude measurements from the computations. For example, it is sometimes beneficial to exclude diffusion volumes acquired withouth diffusion sensitivity (i.e., b-value = 0). In this case, it is sufficient to create a vector of ones with the same size as the number of diffusion volumes in the dataset, and set to 0 the values at the measuremets' positions which are to be ignored. For example, if the dataset consists of 10 diffusion volumes, and the first 3 are to not be considered for the computations, the following vector can be passed to the fitting function:
@@ -96,7 +97,21 @@ ind = [0 0 0 1 1 1 1 1 1 1];
 [model, invariants] = qtiplus_fit(data,btensors,'ind',ind)
 ```
 
- The example provided in the *example dataset* folder shows how use this functionality.
+### nvox
+
+The key word *nvox* allows the user to decide how many voxels to process at a time with the *CVX* solver. From our experience, 50 is about the right choice to promote a significant computational speed increase. Higher values for *nvox* might be counterproductive and lead to slow fitting.
+
+### parallel
+
+The key word *parallel* allows the user to decide whether to run computations over multiple cores. By default, the code checks whether the parallel computing toolbox is available, and if so, it runs computations on all available workers. To not run computations in parallel, set the value for this key to 0:
+
+```matlab
+[model, invariants] = qtiplus_fit(data,btensors,'parallel',0)
+```
+
+
+
+
 
 
 # References
@@ -114,3 +129,11 @@ If you use this package in your Research, please cite the following papers:
 	volume = {238},
 	year = {2021}}
 ```
+
+
+
+# Contact 
+
+Should you have any question regarding the software, please send an email to
+
+>  deneb.boito@liu.se

@@ -8,10 +8,10 @@ function out = simple_mask(volumes,radius,passes)
 % check inputs for multi_median
 switch nargin
     case 1
-        radius = 4;
-        passes = 4;
+        radius = 2;
+        passes = 2;
     case 2
-        passes = 4;
+        passes = 2;
 end
 
 % sum all volumes along 4th direction, pass it with a median filter and normalize

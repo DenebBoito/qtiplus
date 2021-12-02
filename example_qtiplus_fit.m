@@ -1,6 +1,11 @@
+clear
 % this script shows how to use the qtiplus software
 
-% the example dataset is based on signals rising from a non-central
+% first, run the seutp script so that all the necessary folders 
+% are on the matlab path
+run('qtiplus_setup')
+
+% the example dataset used here is based on signals rising from a non-central
 % Wishart distribution whose parameters are set as explained in the
 % QTI+ paper by Herberthson et al. Here we used the same parameters as in
 % the paper, i.e. one distribution originates from an isotropic mean
@@ -19,14 +24,30 @@
 % 5 - Signal from 4) with SNR = 30
 % 6 - Signal from 4) with SNR = 15
 
-clear 
+% the following line is just for plotting purposes when the provided 
+% dataset is used. Comment out if defining a new dataset with different SNRs
+SNR1 = 30;
+SNR2 = 15;
+
+% alternatively, if interested, it is possible to create a dataset similar
+% to the one described above but with costume levels of noise. the function
+% "create_new_example_dataset" may be used for this purpose. For example,
+% the following call to the function will return a dataset in which the
+% data in slices 2 and 5 have SNR1 = 40, while slices 3 and 6 have SNR2 = 10. 
+% slices 1 and 4 remain as explained above. Comment out lines 47 and 48 if
+% defining a new dataset.
+% SNR1 = 40;
+% SNR2 = 10;
+% load('bten')
+% data = create_new_example_dataset(bten, SNR1, SNR2);
+
 
 % load the example dataset and the b-tensors
 % the b-tensors in this example are part of the protocol from
 % Szczepankiewicz et al. Data in Brief 2019
-% 
 load('bten');
 data = niftiread('example_dataset.nii');
+
 
 % create a mask to limit the computation to portion of the dataset
 % by selecting a [(2*range)+1 x (2*range)+1 ] window
@@ -41,13 +62,33 @@ mask(end/2-range:end/2+range, end/2-range:end/2+range,:) = 1;
 ind = ones(217,1);
 ind(1:13) = 0;
 
+
 % perform the fit
 % we pass the indices of the measurements we want to keep during the fit
 % and the mask as key-value pairs
+%
+% On the output: the "model" variable contains the model parameters, 
+% while the "invariant" structure containts the scalar metrics derived from
+% the estimated model parameters. 
+%
 [model,invariants] = qtiplus_fit(data, bten, ...
                                  'ind', ind, ...
                                  'mask', mask);
 
+% Called as follows, the software will perform only the SDPdc step. 
+% additional steps can be performed by selecting the appropriate pipeline
+% via the keyword 'pipeline'. For example, the following call would perform
+% all the steps in the QTI+ framework
+% [model,invariants] = qtiplus_fit(data, bten, ...
+%                                  'ind', ind, ...
+%                                  'mask', mask, ...
+%                                  'pipeline', 2);
+
+
+% there are more options with regard to this and key-value pairs that can 
+% be used to control the behaviour of the software. 
+% Type "help qtiplus_fit" in the command window or consult the user guide
+% for more information.
 
 %% look at the uFA maps
 % the maps for the first and fourth slice can be considered as ground truth
@@ -74,11 +115,11 @@ ax.FontSize = 20;
 
 
 subplot(2,4,2)
-imagesc(uFA(:,:,2), [0 1]), colormap gray, title('SNR = 30',...
+imagesc(uFA(:,:,2), [0 1]), colormap gray, title(sprintf('SNR = %d', SNR1),...
     'FontSize', 20), axis off
 
 subplot(2,4,3)
-imagesc(uFA(:,:,3), [0 1]), colormap gray, title('SNR = 15',...
+imagesc(uFA(:,:,3), [0 1]), colormap gray, title(sprintf('SNR = %d', SNR2),...
     'FontSize', 20), axis off
 
 
@@ -137,5 +178,5 @@ ax.FontSize = 20;
 yl = max(ax.YLim);
 line([gt_ani gt_ani],[0 yl], 'Color', [0.3 0.3 0.3], 'LineWidth', 2,...
     'Linestyle', '--')
-legend('SNR = 30', 'SNR = 15', 'GT', 'Location', 'northwest', 'box', 'off')
+legend(sprintf('SNR = %d', SNR1), sprintf('SNR = %d', SNR2), 'GT', 'Location', 'northwest', 'box', 'off')
  

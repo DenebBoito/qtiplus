@@ -99,7 +99,7 @@ if strcmpi(solver, 'mosek')
         
     catch
         cvx_solver SDPT3
-        fprintf('The selected solver is not available, using SDPT3 instead \n')
+        fprintf('Mosek is not available, using SDPT3 instead \n')
         cvxsolver = 'sdpt3';
     end
 else
@@ -116,10 +116,15 @@ if mask == 0
 end
 
 % if parallel computations desired, start a parpool if one is not active
+% also check to see if parallel toolbox is installed
 if parallel
-    pp = gcp('nocreate');
-    if isempty(pp)
-        parpool
+    if license('test', 'Distrib_Computing_Toolbox')
+        pp = gcp('nocreate');
+        if isempty(pp)
+            parpool
+        end
+    else
+        fprintf('Parallel computing toolbox not available. Proceeding with one worker \n')
     end
 end
 
