@@ -1,5 +1,5 @@
-function [model,invariants] = qtiplus_fit(data,btensors,varargin)
-% function [model,invariants] = qtiplus_fit(data, btensors)
+function [model,invariants,varargout] = qtiplus_fit(data,btensors,varargin)
+% function [model,invariants,varargout] = qtiplus_fit(data, btensors)
 %
 % This function computes the non-diffusion weighted signal S0, the mean
 % diffusivity tensor D, and the covariance tensor C as implied by the QTI
@@ -52,7 +52,7 @@ function [model,invariants] = qtiplus_fit(data,btensors,varargin)
 %                         solver (default : 'mosek')
 %
 % OUTPUT:
-%           - model:      the model parameters, in a [nx,ny,nz,28] matrix where
+%           - model:      the final model parameters, in a [nx,ny,nz,28] matrix where
 %                         the 28 parameters are ordered as follows:
 %                                                    - model(x,y,z,1)   = S0
 %                                                    - model(x,y,z,2:7) = D
@@ -62,6 +62,10 @@ function [model,invariants] = qtiplus_fit(data,btensors,varargin)
 %           - invariants: a structure containing the invariants derived
 %                         from the model parameters. The nomeclature
 %                         follows the one reported in Westin et al (2016) NeuroImage
+%
+%           - varargout:  if a pipeline with multiple steps is selected,
+%                         the intermediate model parameters are contained in this
+%                         variable, ordered according to the chosen pipeline.
 %
 %
 % Author: Deneb Boito 
@@ -155,13 +159,16 @@ switch pipeline
         fprintf('Selected steps: SDPdc & NLLSdc \n')
         fprintf('Fitting...\n')
         model = qtip_pipe_SDPdc(data,btensors,mask,nvox,ind,parallel,cvxsolver);
+        varargout{1} = model;
         model = qtip_pipe_NLLSdc(model,data,btensors,mask,ind,parallel);
         
     case 2 % SDPdc & NLLSdc & m-check & SDPdcm
         fprintf('Selected steps: SDPdc & NLLSdc & m-check & SDPdcm \n')
         fprintf('Fitting...\n')
         model = qtip_pipe_SDPdc(data,btensors,mask,nvox,ind,parallel,cvxsolver);
+        varargout{1} = model;
         model = qtip_pipe_NLLSdc(model,data,btensors,mask,ind,parallel);
+        varargout{2} = model;
         model = qtip_pipe_SDPdcm(model,data,btensors,mask,nvox,mcheckflag,ind,parallel,cvxsolver);
         
     case 3 % SDPdc & NLLSdc & SDPdcm
@@ -169,19 +176,25 @@ switch pipeline
         fprintf('Fitting...\n')
         mcheckflag = 0;
         model = qtip_pipe_SDPdc(data,btensors,mask,nvox,ind,parallel,cvxsolver);
+        varargout{1} = model;
         model = qtip_pipe_NLLSdc(model,data,btensors,mask,ind,parallel);
+        varargout{2} = model;
         model = qtip_pipe_SDPdcm(model,data,btensors,mask,nvox,mcheckflag,ind,parallel,cvxsolver);
         
     case 4 % SDPdc & m-check & SDPdcm
         fprintf('Selected steps: SDPdc & SDPdcm (with m-check) \n')
         fprintf('Fitting...\n')
-        model = qtip_pipe_SDPdc_SDPdcm(data,btensors,mask,nvox,mcheckflag,ind,parallel,cvxsolver);
+        model = qtip_pipe_SDPdc(data,btensors,mask,nvox,ind,parallel,cvxsolver);
+        varargout{1} = model;
+        model = qtip_pipe_SDPdcm(model,data,btensors,mask,nvox,mcheckflag,ind,parallel,cvxsolver);
         
     case 5 % SDPdc & SDPdcm
         fprintf('Selected steps: SDPdc & SDPdcm \n')
         fprintf('Fitting...\n')
         mcheckflag = 0;
-        model = qtip_pipe_SDPdc_SDPdcm(data,btensors,mask,nvox,mcheckflag,ind,parallel,cvxsolver);
+        model = qtip_pipe_SDPdc(data,btensors,mask,nvox,ind,parallel,cvxsolver);
+        varargout{1} = model;
+        model = qtip_pipe_SDPdcm(model,data,btensors,mask,nvox,mcheckflag,ind,parallel,cvxsolver);
         
 end
 

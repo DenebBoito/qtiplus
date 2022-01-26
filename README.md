@@ -2,7 +2,7 @@
 
 This repository contains the Matab implementation of the routines used in the paper [Q-space trajectory imaging with positivity constraints (QTI+)](https://www.sciencedirect.com/science/article/pii/S1053811921004754) by Herberthson et. al.  Here you will find information regarding the installation and basic usage of the library. For details regarding the methods, and for their nomenclature, we refer you to the paper.
 
-In what follows, you will find how to quickly start using the software for analysing your data. For more details and information, and for an example on how to use the softare, please consult the user guide.
+In what follows, you will find how to quickly start using the software for analysing your data. For more details and information, and for examples on how to use the softare, please consult the user guide.
 
 
 
@@ -111,14 +111,17 @@ The key word *parallel* allows the user to decide whether to run computations ov
 
 
 
+# Example
+
+There are two examples in the package showing how to use the main functionalities of the software. One example, contained in the script *example_qtiplus_fit_synthetic_data* , makes use of synthetic data which are available in the *example dataset* folder. The other example, contained in the script *example_qtiplus_fit_experimental_data* requires the brain data acquired with a tensor-valued diffusion encoding sequence described in [Szczepankiewicz et al.](https://www.sciencedirect.com/science/article/pii/S2352340919305621?via%3Dihub) ,and available [here](https://github.com/filip-szczepankiewicz/Szczepankiewicz_DIB_2019). To run this example, the user is required to autonomosly download the data. More information about the examples can be found in the User Guide.
 
 
 
 # References
 
-If you use this package in your Research, please cite the following papers:
+If you use this package in your Research, please cite the following articles:
 
-> Herberthson M, Boito D, Haije TD, Feragen A, Westin CF, Özarslan E. Q-space trajectory imaging with positivity constraints (QTI+). Neuroimage. 2021 May 21;238:118198. doi: 10.1016/j.neuroimage.2021.118198. Epub ahead of print. PMID: 34029738.
+> [1] Herberthson M, Boito D, Haije TD, Feragen A, Westin CF, Özarslan E. Q-space trajectory imaging with positivity constraints (QTI+). Neuroimage. 2021 May 21;238:118198. doi: 10.1016/j.neuroimage.2021.118198. Epub ahead of print. PMID: 34029738.
 
 ```latex
 @article{Herberthson2021,

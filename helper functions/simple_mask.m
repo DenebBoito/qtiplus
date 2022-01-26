@@ -25,4 +25,11 @@ for i = 1 : size(Vnorm,3)
     th = graythresh(Vnorm(:,:,i));
     out(:,:,i) = imbinarize(Vnorm(:,:,i),th);
 end
+
+% fill holes slice by slice
+for i = 1:size(out,3)
+    tmp = out(:,:,i);
+    out(:,:,i) = imfill(tmp, 'holes');
+end
+
 end
