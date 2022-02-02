@@ -111,7 +111,7 @@ The key word *parallel* allows the user to decide whether to run computations ov
 
 
 
-# Example
+# Examples
 
 There are two examples in the package showing how to use the main functionalities of the software. One example, contained in the script *example_qtiplus_fit_synthetic_data* , makes use of synthetic data which are available in the *example dataset* folder. The other example, contained in the script *example_qtiplus_fit_experimental_data* requires the brain data acquired with a tensor-valued diffusion encoding sequence described in [Szczepankiewicz et al.](https://www.sciencedirect.com/science/article/pii/S2352340919305621?via%3Dihub) ,and available [here](https://github.com/filip-szczepankiewicz/Szczepankiewicz_DIB_2019). To run this example, the user is required to autonomosly download the data. More information about the examples can be found in the User Guide.
 

@@ -78,14 +78,15 @@ ind(1:13) = 0;
 % Called as follows, the software will perform only the SDPdc step. 
 % additional steps can be performed by selecting the appropriate pipeline
 % via the keyword 'pipeline'. For example, the following call would perform
-% all the steps in the QTI+ framework
+% all the steps in the QTI+ framework, and fit 70 voxels simultaneously
 % [model,invariants] = qtiplus_fit(data, bten, ...
 %                                  'ind', ind, ...
 %                                  'mask', mask, ...
-%                                  'pipeline', 2);
+%                                  'pipeline', 2, ...
+%                                  'nvox', 70);
 
 
-% there are more options with regard to this and key-value pairs that can 
+% there are more options with regard to these and other key-value pairs that can 
 % be used to control the behaviour of the software. 
 % Type "help qtiplus_fit" in the command window or consult the user guide
 % for more information.
@@ -102,7 +103,7 @@ gt_ani = uFA(1,1,4);
 x_values = 0:0.01:1;
 
 
-figure()
+figure('units','normalized','outerposition',[0 0 1 1])
 subplot(2,4,1)
 imagesc(uFA(:,:,1), [0 1]), colormap gray, title('GT'),...
     ylabel('Isotropic $\widehat{\mathbf{D}}_{ij}$', 'Interpreter','latex')
