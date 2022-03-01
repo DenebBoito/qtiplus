@@ -76,7 +76,7 @@ else
         
     else
         
-        parfor k = 1:y_fit
+        for k = 1:y_fit
             
             m_fit(:,k) = qtip_data2fit_SDPdcm(model(:,k), data_fit(:,k), btensors, ...
                                                  'nvox', nvox, ...
