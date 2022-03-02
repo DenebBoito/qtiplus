@@ -37,6 +37,7 @@ function [model,invariants,varargout] = qtiplus_fit(data,btensors,varargin)
 %                                   - 5: SDPdc & SDPdcm
 %                                   - 6: SDPdcSL
 %                                   - 7: SDPdcSL & SDPdcmSL
+%                                   - 8: DTI+ (SDPd)
 %
 %           - nvox:       integer indicating how many voxel to process at
 %                         once (default: 50). a warning: from experience,
@@ -214,9 +215,33 @@ switch pipeline
         model = qtipm_pipe_SDPdcm(data,btensors, D0, mask,nvox,ind,parallel,cvxsolver);
         varargout{1} = model;
         model = qtipm_pipe_SDPdcmSL(model,data,btensors, D0, mask,nvox,ind,parallel,cvxsolver);
+        
+    case 8 % DTI+ (SDP)
+        fprintf('Selected step: DTI+ (SDP)')
+        fprintf('Fitting...\n')
+        model = dtiplus_pipe_SDP();
+        
+    case 9 % DTI+ (SDP & NLLS)
+        fprintf('Selected steps: DTI+ (SDP & NLLS)')
+        fprintf('Fitting...\n')
+        model = dtip_pipe_SDP(data,btensors,mask,nvox,ind,parallel,cvxsolver);
+        varargout{1} = model;
+        model = dtip_pipe_NLLS(model,data,btensors,mask,ind,parallel);
+         
 end
 
+if pipeline < 8
 % compute invariants
 invariants = compute_invariants(model);
+else
+    % compute only dti invatiants
+    siz = size(model);
+    mreshape = reshape(model, prod(siz(1:3)), 28);
+    D = mreshape(:,2:7) * 1e9;
+    invariants.s0 = squeeze(model(:,:,:,1));
+    [invariants.FA, invariants.AD, invariants.RD, invariants.ax_dir, invariants.FA_col] = compute_lamda_params(D,siz);
+    invariants.MD = 1/3 * sum(model(:,:,:,2:4),4) * 1e9; % change units to um2/ms
+end
 fprintf('...Done!\n')
+
 end
