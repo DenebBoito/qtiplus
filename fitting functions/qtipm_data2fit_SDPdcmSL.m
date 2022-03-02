@@ -96,6 +96,9 @@ else % pagemtimes should be available
     end
 end
 
+% define variables for speed limit
+mask_c2_SL = 3/4 * D0^2 * eye(6);
+D024 = D0^2 / 4;
  
 %% cvx 
 cvx_begin sdp quiet
@@ -110,7 +113,7 @@ cvx_begin sdp quiet
         % define unknowns
         variable t(nvox)
         variable y(21,nvox) 
-        variable lambda(9,nvox)
+        variables lambda(9,nvox) lambda_sl(9,nvox) lambda_gp(9,nvox) lambda_gm(9,nvox)
 
         % define objective function
         minimize(sum(t))
@@ -124,7 +127,7 @@ cvx_begin sdp quiet
 
             % C & M constraints
             convert_1x21_to_6x6(y(:,i)) >= 0;
-            get_M_9x9_from_d_c(convert_1x6_to_3x3(d(2:7,i)),convert_1x21_to_3x3x3x3_cvx(y(:,i)),lambda(:,i)) >= 0
+            get_M_9x9_from_d_c(convert_1x6_to_3x3(d(2:7,i)),convert_1x21_to_3x3x3x3(y(:,i)),lambda(:,i)) >= 0
 
             % (c-) diagonal components speed  limit
             D024 - y(1,i) >= 0
@@ -145,13 +148,13 @@ cvx_begin sdp quiet
             mask_c2_SL - convert_1x21_to_6x6(y(:,i)) >= 0;
 
             % Gamma plus
-            qtipm_get_gammap(tm_1x21_to_3x3x3x3_cvx(y(:,i)),lambda_gp(:,i), D0) >= 0
+            qtipm_get_gammap(convert_1x21_to_3x3x3x3(y(:,i)),lambda_gp(:,i), D0) >= 0
 
             % Gamma minus
-            qtipm_get_gammam(tm_1x21_to_3x3x3x3_cvx(y(:,i)),lambda_gm(:,i), D0) >= 0
+            qtipm_get_gammam(convert_1x21_to_3x3x3x3(y(:,i)),lambda_gm(:,i), D0) >= 0
 
             % (m-) speed limit
-            get_M_9x9_from_d_c_SL(tm_1x6_to_3x3(d(2:7,i)),tm_1x21_to_3x3x3x3_cvx(y(:,i)),lambda_sl(:,i), D0) >= 0
+            get_M_9x9_from_d_c_SL(convert_1x6_to_3x3(d(2:7,i)),convert_1x21_to_3x3x3x3(y(:,i)),lambda_sl(:,i), D0) >= 0
 
         end
 

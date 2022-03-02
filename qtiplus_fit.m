@@ -205,28 +205,28 @@ switch pipeline
         model = qtip_pipe_SDPdcm(model,data,btensors,mask,nvox,mcheckflag,ind,parallel,cvxsolver);
         
     case 6 % SDPdcSL
-        fprintf('Select step: SDPdcSL')
+        fprintf('Select step: SDPdcSL \n')
         fprintf('Fitting...\n')
-        model = qtipm_pipe_SDPdcm(data,btensors, D0, mask,nvox,ind,parallel,cvxsolver);
+        model = qtipm_pipe_SDPdcSL(data,btensors, D0, mask,nvox,ind,parallel,cvxsolver);
         
     case 7 % SDPdcSL & SDPdcmSL
-        fprintf('Select steps: SDPdcSL & SDPdcmSL')
+        fprintf('Select steps: SDPdcSL & SDPdcmSL \n')
         fprintf('Fitting...\n')
-        model = qtipm_pipe_SDPdcm(data,btensors, D0, mask,nvox,ind,parallel,cvxsolver);
+        model = qtipm_pipe_SDPdcSL(data,btensors, D0, mask,nvox,ind,parallel,cvxsolver);
         varargout{1} = model;
         model = qtipm_pipe_SDPdcmSL(model,data,btensors, D0, mask,nvox,ind,parallel,cvxsolver);
         
     case 8 % DTI+ (SDP)
-        fprintf('Selected step: DTI+ (SDP)')
+        fprintf('Selected step: DTI+ (SDP) \n')
         fprintf('Fitting...\n')
-        model = dtiplus_pipe_SDP();
+        model = dtip_pipe_SDPd(data,btensors,mask,nvox,ind,parallel,cvxsolver);
         
     case 9 % DTI+ (SDP & NLLS)
-        fprintf('Selected steps: DTI+ (SDP & NLLS)')
+        fprintf('Selected steps: DTI+ (SDP & NLLS) \n')
         fprintf('Fitting...\n')
-        model = dtip_pipe_SDP(data,btensors,mask,nvox,ind,parallel,cvxsolver);
+        model = dtip_pipe_SDPd(data,btensors,mask,nvox,ind,parallel,cvxsolver);
         varargout{1} = model;
-        model = dtip_pipe_NLLS(model,data,btensors,mask,ind,parallel);
+        model = dtip_pipe_NLLSd(model,data,btensors,mask,ind,parallel);
          
 end
 
@@ -236,7 +236,7 @@ invariants = compute_invariants(model);
 else
     % compute only dti invatiants
     siz = size(model);
-    mreshape = reshape(model, prod(siz(1:3)), 28);
+    mreshape = reshape(model, prod(siz(1:3)), 7);
     D = mreshape(:,2:7) * 1e9;
     invariants.s0 = squeeze(model(:,:,:,1));
     [invariants.FA, invariants.AD, invariants.RD, invariants.ax_dir, invariants.FA_col] = compute_lamda_params(D,siz);

@@ -19,13 +19,13 @@ m_fit = zeros(7,y_fit);
 if parallel
     parfor k = 1:y_fit
         
-        m_fit(:,k) = qtip_data2fit_NLLSdc(model(:,k), data(:,k), btensors, ind);
+        m_fit(:,k) = dtip_data2fit_NLLSd(model(:,k), data(:,k), btensors, ind);
         
     end
 else
     for k = 1:y_fit
         
-        m_fit(:,k) = qtip_data2fit_NLLSdc(model(:,k), data(:,k), btensors, ind);
+        m_fit(:,k) = dtip_data2fit_NLLSd(model(:,k), data(:,k), btensors, ind);
         
     end
 end
@@ -34,6 +34,6 @@ end
 m_fit = reshape(m_fit,7,[]);
 model = zeros(7, prod(siz(1:3)));
 model(:,si) = m_fit;
-model = reshape(model', siz(1), siz(2), siz(3), 28);
+model = reshape(model', siz(1), siz(2), siz(3), 7);
 
 end

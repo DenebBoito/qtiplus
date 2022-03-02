@@ -52,7 +52,7 @@ signallog(~isfinite(signallog)) = 0;
 
 % least squares variables
 b = signal .* signallog;
-s_reshaped = repmat(reshape(signal,[],1,nvox), [1 28 1]);
+s_reshaped = repmat(reshape(signal,[],1,nvox), [1 7 1]);
 A = s_reshaped .* regressors;
 
 % compute P and c
@@ -95,7 +95,7 @@ cvx_begin sdp quiet
         for i = 1:nvox
 
             % problem
-            [eye(28)                             P(:,:,i) * x(:,i); ...
+            [eye(7)                             P(:,:,i) * x(:,i); ...
              (P(:,:,i) * x(:,i))'               t(i) - c(:,i)'* x(:,i)]  >= 0;
 
             % D constraint

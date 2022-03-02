@@ -45,6 +45,6 @@ if vox_add > 0
 end
 model = zeros(7, prod(siz(1:3)));
 model(:,si) = m_fit;
-model = reshape(model', siz(1), siz(2), siz(3), 28);
+model = reshape(model', siz(1), siz(2), siz(3), 7);
 
 end
