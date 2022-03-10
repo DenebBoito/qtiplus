@@ -121,7 +121,9 @@ There are two examples in the package showing how to use the main functionalitie
 
 If you use this package in your Research, please cite the following articles:
 
-> [1] Herberthson M, Boito D, Haije TD, Feragen A, Westin CF, Özarslan E. Q-space trajectory imaging with positivity constraints (QTI+). Neuroimage. 2021 May 21;238:118198. doi: 10.1016/j.neuroimage.2021.118198. Epub ahead of print. PMID: 34029738.
+> [1] Herberthson M, Boito D, Haije TD, Feragen A, Westin CF, Özarslan E. Q-space trajectory imaging with positivity constraints (QTI+). Neuroimage. 2021 May 21;238:118198. doi: 10.1016/j.neuroimage.2021.118198. Epub ahead of print. PMID: 34029738. 
+
+> [2] Boito D, Herberthson M, Dela Haije T, Özarslan E. Applying positivity constraints to q-space trajectory imaging: the QTI+ implementation. SoftwareX. 2022 March; volume 18. doi: https://doi.org/10.1016/j.softx.2022.101030.
 
 ```latex
 @article{Herberthson2021,
@@ -132,7 +134,18 @@ If you use this package in your Research, please cite the following articles:
 	volume = {238},
 	year = {2021}}
 ```
-
+```latex
+@article{Boito2022,
+	title = {Applying positivity constraints to q-space trajectory imaging: The QTI+ implementation},
+	journal = {SoftwareX},
+	volume = {18},
+	pages = {101030},
+	year = {2022},
+	issn = {2352-7110},
+	doi = {https://doi.org/10.1016/j.softx.2022.101030},
+	url = {https://www.sciencedirect.com/science/article/pii/S2352711022000322},
+	author = {Deneb Boito and Magnus Herberthson and Tom {Dela Haije} and Evren Özarslan}}
+```
 
 
 # Contact 
