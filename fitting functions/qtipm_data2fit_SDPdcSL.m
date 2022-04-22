@@ -130,7 +130,7 @@ cvx_begin sdp quiet
             mask_c2_SL - convert_1x21_to_6x6(x(8:28,i)) >= 0
 
             % Gamma plus
-            qtipm_get_gammap(tm_1x21_to_3x3x3x3_cvx(x(8:28,i)),lambda_gp(:,i), D0) >= 0
+            % qtipm_get_gammap(tm_1x21_to_3x3x3x3_cvx(x(8:28,i)),lambda_gp(:,i), D0) >= 0
 
             % Gamma minus
             qtipm_get_gammam(tm_1x21_to_3x3x3x3_cvx(x(8:28,i)),lambda_gm(:,i), D0) >= 0
