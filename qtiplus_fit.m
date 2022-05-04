@@ -37,6 +37,7 @@ function [model,invariants,varargout] = qtiplus_fit(data,btensors,varargin)
 %                                   - 5: SDPdc & SDPdcm
 %                                   - 6: SDPdcSL
 %                                   - 7: SDPdcSL & SDPdcmSL
+%                                   - 8: SDPdcSL & m-check & SDPdcmSL
 %
 %           - nvox:       integer indicating how many voxel to process at
 %                         once (default: 50). a warning: from experience,
