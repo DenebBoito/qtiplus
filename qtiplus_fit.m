@@ -37,11 +37,9 @@ function [model,invariants,varargout] = qtiplus_fit(data,btensors,varargin)
 %                                   - 5: SDPdc & SDPdcm
 %                                   - 6: SDPdcSL
 %                                   - 7: SDPdcSL & SDPdcmSL
-<<<<<<< HEAD
 %                                   - 8: SDPdcSL & m-check & SDPdcmSL
-=======
-%                                   - 8: DTI+ (SDPd)
->>>>>>> dtiplus
+%                                   - 9: DTI+ (SDPd)
+%                                   - 10: DTI+ (SDPd & NLLSd)
 %
 %           - nvox:       integer indicating how many voxel to process at
 %                         once (default: 50). a warning: from experience,
@@ -220,28 +218,26 @@ switch pipeline
         varargout{1} = model;
         model = qtipm_pipe_SDPdcmSL(model,data,btensors, D0, mask,nvox,ind,parallel,cvxsolver);
         
-<<<<<<< HEAD
     case 8 % SDPdcSL & m-check & SDPdcmSL
         fprintf('Select steps: SDPdcSL & SDPdcmSL (with m-check) \n')
         fprintf('Fitting...\n')
         [model, varargout{1}]= qtipm_pipe_SDPdcSL_SDPdcmSL(data,btensors, D0, mask,nvox,mcheckflag,ind,parallel,cvxsolver);
-=======
-    case 8 % DTI+ (SDP)
+        
+    case 9 % DTI+ (SDP)
         fprintf('Selected step: DTI+ (SDP) \n')
         fprintf('Fitting...\n')
         model = dtip_pipe_SDPd(data,btensors,mask,nvox,ind,parallel,cvxsolver);
         
-    case 9 % DTI+ (SDP & NLLS)
+    case 10 % DTI+ (SDP & NLLS)
         fprintf('Selected steps: DTI+ (SDP & NLLS) \n')
         fprintf('Fitting...\n')
         model = dtip_pipe_SDPd(data,btensors,mask,nvox,ind,parallel,cvxsolver);
         varargout{1} = model;
         model = dtip_pipe_NLLSd(model,data,btensors,mask,ind,parallel);
          
->>>>>>> dtiplus
 end
 
-if pipeline < 8
+if pipeline < 9
 % compute invariants
 invariants = compute_invariants(model);
 else
