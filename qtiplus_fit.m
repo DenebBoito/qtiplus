@@ -37,7 +37,11 @@ function [model,invariants,varargout] = qtiplus_fit(data,btensors,varargin)
 %                                   - 5: SDPdc & SDPdcm
 %                                   - 6: SDPdcSL
 %                                   - 7: SDPdcSL & SDPdcmSL
+<<<<<<< HEAD
 %                                   - 8: SDPdcSL & m-check & SDPdcmSL
+=======
+%                                   - 8: DTI+ (SDPd)
+>>>>>>> dtiplus
 %
 %           - nvox:       integer indicating how many voxel to process at
 %                         once (default: 50). a warning: from experience,
@@ -207,22 +211,43 @@ switch pipeline
     case 6 % SDPdcSL
         fprintf('Select step: SDPdcSL \n')
         fprintf('Fitting...\n')
-        model = qtipm_pipe_SDPdcm(data,btensors, D0, mask,nvox,ind,parallel,cvxsolver);
+        model = qtipm_pipe_SDPdcSL(data,btensors, D0, mask,nvox,ind,parallel,cvxsolver);
         
     case 7 % SDPdcSL & SDPdcmSL
         fprintf('Select steps: SDPdcSL & SDPdcmSL \n')
         fprintf('Fitting...\n')
-        model = qtipm_pipe_SDPdcm(data,btensors, D0, mask,nvox,ind,parallel,cvxsolver);
+        model = qtipm_pipe_SDPdcSL(data,btensors, D0, mask,nvox,ind,parallel,cvxsolver);
         varargout{1} = model;
         model = qtipm_pipe_SDPdcmSL(model,data,btensors, D0, mask,nvox,ind,parallel,cvxsolver);
         
+<<<<<<< HEAD
     case 8 % SDPdcSL & m-check & SDPdcmSL
         fprintf('Select steps: SDPdcSL & SDPdcmSL (with m-check) \n')
         fprintf('Fitting...\n')
         [model, varargout{1}]= qtipm_pipe_SDPdcSL_SDPdcmSL(data,btensors, D0, mask,nvox,mcheckflag,ind,parallel,cvxsolver);
+=======
+    case 8 % DTI+ (SDP)
+        fprintf('Selected step: DTI+ (SDP) \n')
+        fprintf('Fitting...\n')
+        model = dtip_pipe_SDPd(data,btensors,mask,nvox,ind,parallel,cvxsolver);
+        
+    case 9 % DTI+ (SDP & NLLS)
+        fprintf('Selected steps: DTI+ (SDP & NLLS) \n')
+        fprintf('Fitting...\n')
+        model = dtip_pipe_SDPd(data,btensors,mask,nvox,ind,parallel,cvxsolver);
+        varargout{1} = model;
+        model = dtip_pipe_NLLSd(model,data,btensors,mask,ind,parallel);
+         
+>>>>>>> dtiplus
 end
 
+if pipeline < 8
 % compute invariants
 invariants = compute_invariants(model);
+else
+    % compute only dti invatiants
+    invariants = compute_dti_invariants(model);
+end
 fprintf('...Done!\n')
+
 end

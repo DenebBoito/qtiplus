@@ -1,5 +1,5 @@
-function model = qtipm_data2fit_SDPdcSL(signal,bten,varargin)
-% function model = qtip_data2fit_SDPdc()
+function model = dtip_data2fit_SDPd(signal,bten,varargin)
+% function model = dtip_data2fit_SDPd()
 %
 % out_flag says which format to use for m : 
 %                                           out_flag = 1 -> [28*nvox,1]
@@ -12,13 +12,11 @@ p.addParameter('nvox', 1)
 p.addParameter('ind', ones(nmeas,1)>0)
 p.addParameter('outflag',1)
 p.addParameter('cvxsolver', 'sdpt3')
-p.addParameter('D0', 3.1)
 p.parse(varargin{:})
 nvox        = p.Results.nvox;
 ind         = p.Results.ind;
 outflag     = p.Results.outflag;
 cvxsolver   = p.Results.cvxsolver;
-D0          = p.Results.D0;
 
 
 
@@ -54,7 +52,7 @@ signallog(~isfinite(signallog)) = 0;
 
 % least squares variables
 b = signal .* signallog;
-s_reshaped = repmat(reshape(signal,[],1,nvox), [1 28 1]);
+s_reshaped = repmat(reshape(signal,[],1,nvox), [1 7 1]);
 A = s_reshaped .* regressors;
 
 % compute P and c
@@ -69,16 +67,12 @@ else % pagemtimes should be available
     Q = pagemtimes(A,'transpose',A, 'none');
     c = -2 * pagemtimes(A,'transpose',permute(b,[1 3 2]), 'none');
     c = squeeze(c);
-    P = zeros(28,28,nvox);
+    P = zeros(7,7,nvox);
     for i = 1:nvox
         P(:,:,i) = sqrtm(Q(:,:,i));
     end
 end
 
-% variables for speed limit
-mask_c2_SL = 3/4 * D0^2 * eye(6);
-D024 = D0^2 / 4;
-D0eye3 = D0 * eye(3);
  
 %% cvx 
 cvx_begin sdp quiet
@@ -91,8 +85,8 @@ cvx_begin sdp quiet
         end
 
         % define unknowns
-        variables t(nvox) lambda_gm(9,nvox) lambda_gp(9,nvox)
-        variable x(28,nvox)
+        variable t(nvox)
+        variable x(7,nvox) 
 
         % define objective function
         minimize(sum(t))
@@ -101,43 +95,11 @@ cvx_begin sdp quiet
         for i = 1:nvox
 
             % problem
-            [eye(28)                             P(:,:,i) * x(:,i); ...
-            (P(:,:,i) * x(:,i))'               t(i) - c(:,i)'* x(:,i)]  >= 0;
+            [eye(7)                             P(:,:,i) * x(:,i); ...
+             (P(:,:,i) * x(:,i))'               t(i) - c(:,i)'* x(:,i)]  >= 0;
 
-            % D & C constraints
+            % D constraint
             convert_1x6_to_3x3(x(2:7,i)) >= 0;
-            convert_1x21_to_6x6(x(8:28,i)) >= 0;
-
-            % (d-) speed limit
-            D0eye3 - convert_1x6_to_3x3(x(2:7,i)) >= 0;
-
-            % (c-) diagonal components speed  limit
-            D024 - x(8,i) >= 0
-            D024 - x(9,i) >= 0
-            D024 - x(10,i) >= 0
-
-            % (c-) off-diagonal components speed limit, beware scaling due to voigt
-            % format
-            D024 + x(11,i)/sqrt(2) >= 0
-            D024 + x(12,i)/sqrt(2) >= 0
-            D024 + x(13,i)/sqrt(2) >= 0
-
-            D024 - x(11,i)/sqrt(2) >= 0
-            D024 - x(12,i)/sqrt(2) >= 0
-            D024 - x(13,i)/sqrt(2) >= 0
-
-            % (c-) eigenvalues speed limit
-            mask_c2_SL - convert_1x21_to_6x6(x(8:28,i)) >= 0
-
-            % Gamma plus
-<<<<<<< HEAD
-            % qtipm_get_gammap(tm_1x21_to_3x3x3x3_cvx(x(8:28,i)),lambda_gp(:,i), D0) >= 0
-=======
-            % qtipm_get_gammap(convert_1x21_to_3x3x3x3(x(8:28,i)),lambda_gp(:,i), D0) >= 0
->>>>>>> dtiplus
-
-            % Gamma minus
-            qtipm_get_gammam(convert_1x21_to_3x3x3x3(x(8:28,i)),lambda_gm(:,i), D0) >= 0
 
         end
 
@@ -147,11 +109,11 @@ cvx_end
 % need to check how data were input
 if flag && outflag
     x(1,:) = exp(x(1,:));
-    model = x .* [signal_scales(1,:); 1e-9 * ones(6,nvox); 1e-18 * ones(21,nvox)] ;
+    model = x .* [signal_scales(1,:); 1e-9 * ones(6,nvox)] ;
     model = model(:);
 else % switch to [28,nvox] format
     x(1,:) = exp(x(1,:));
-    model = x .* [signal_scales(1,:); 1e-9 * ones(6,nvox); 1e-18 * ones(21,nvox)] ;
+    model = x .* [signal_scales(1,:); 1e-9 * ones(6,nvox)] ;
 end
 
 end
@@ -166,8 +128,7 @@ if  ~isempty(reg) && (numel(reg.b2(:)) == numel(b2(:))) && reg.nvox == nvox && a
 end
 
 b0 = ones(nmeas, 1);
-b4 = convert_1x6_to_1x21(b2);
-regressors = repmat([b0 -b2 1/2 * b4], [1 1 nvox]);
+regressors = repmat([b0 -b2], [1 1 nvox]);
 reg.regressors = regressors;
 reg.b2 = b2;
 reg.nvox = nvox;
