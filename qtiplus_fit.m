@@ -204,16 +204,21 @@ switch pipeline
         model = qtip_pipe_SDPdcm(model,data,btensors,mask,nvox,mcheckflag,ind,parallel,cvxsolver);
         
     case 6 % SDPdcSL
-        fprintf('Select step: SDPdcSL')
+        fprintf('Select step: SDPdcSL \n')
         fprintf('Fitting...\n')
         model = qtipm_pipe_SDPdcm(data,btensors, D0, mask,nvox,ind,parallel,cvxsolver);
         
     case 7 % SDPdcSL & SDPdcmSL
-        fprintf('Select steps: SDPdcSL & SDPdcmSL')
+        fprintf('Select steps: SDPdcSL & SDPdcmSL \n')
         fprintf('Fitting...\n')
         model = qtipm_pipe_SDPdcm(data,btensors, D0, mask,nvox,ind,parallel,cvxsolver);
         varargout{1} = model;
         model = qtipm_pipe_SDPdcmSL(model,data,btensors, D0, mask,nvox,ind,parallel,cvxsolver);
+        
+    case 8 % SDPdcSL & m-check & SDPdcmSL
+        fprintf('Select steps: SDPdcSL & SDPdcmSL (with m-check) \n')
+        fprintf('Fitting...\n')
+        [model, varargout{1}]= qtipm_pipe_SDPdcSL_SDPdcmSL(data,btensors, D0, mask,nvox,mcheckflag,ind,parallel,cvxsolver);
 end
 
 % compute invariants
