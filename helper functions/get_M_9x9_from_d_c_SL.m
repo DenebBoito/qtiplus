@@ -4,8 +4,8 @@ function m_tilde = get_M_9x9_from_d_c_SL(d,c,l,D0)
 %
 
 dij = eye(3);
-dij_1x6 = tm_3x3_to_1x6(dij);
-DijDkl = D0^2 * tm_1x21_to_3x3x3x3(tm_1x6_to_1x21(dij_1x6));
+dij_1x6 = convert_3x3_to_1x6(dij);
+DijDkl = D0^2 * convert_1x21_to_3x3x3x3(convert_1x6_to_1x21(dij_1x6));
 
 % this is D0^2IijIkl - Mijkl 
 % switching to Magnus convetion for the lambdas
