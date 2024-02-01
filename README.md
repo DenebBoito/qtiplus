@@ -1,9 +1,8 @@
-# QTI+ : Matlab Implementation
+# QTI+ & QTI±: Matlab Implementation
 
-This repository contains the Matab implementation of the routines used in the paper [Q-space trajectory imaging with positivity constraints (QTI+)](https://www.sciencedirect.com/science/article/pii/S1053811921004754) by Herberthson et. al.  Here you will find information regarding the installation and basic usage of the library. For details regarding the methods, and for their nomenclature, we refer you to the paper.
+This repository contains the Matab implementation of the routines used in the papers [Q-space trajectory imaging with positivity constraints (QTI+)] (https://www.sciencedirect.com/science/article/pii/S1053811921004754) by Herberthson et. al., and [Diffusivity-limited q-space trajectory imaging](https://www.sciencedirect.com/science/article/pii/S2772516223000013?via%3Dihub) by Boito et al..  Here you will find information regarding the installation and basic usage of the library. For details regarding the methods, and for their nomenclature, we refer you to the papers.
 
 In what follows, you will find how to quickly start using the software for analysing your data. For more details and information, and for examples on how to use the softare, please consult the user guide.
-
 
 
 # Quick start
@@ -14,9 +13,9 @@ In order to use the routines in this library, [CVX](http://cvxr.com/cvx/) needs 
 Note that in our implementation we favoured Mosek as the solver to be used. Even though Mosek can be obtained together with CVX (depending on which bundle you download), it requires a licence in order to be used. Such licence is free for academic purposes, and instructions on how to obtain the licence and where to place it in your machine can be found [here](http://cvxr.com/cvx/doc/mosek.html).  If Mosek is not available, the QTI+ routines will use another solver that ships with CVX, SDPT3.
 
 
-## Installing QTI+
+## Installing QTI+ & QTI±
 
-All the codes for QTI+ are written in Matlab, meaning that is it sufficient to either clone or download the files from this Github page, and add them to you Matlab path to start using it. The function *qtiplus_setup* may assist in adding all the folders to the path.
+All the codes for QTI+ & QTI± are written in Matlab, meaning that is it sufficient to either clone or download the files from this Github page, and add them to you Matlab path to start using it. The function *qtiplus_setup* may assist in adding all the folders to the path.
 
 
 ## Data and B-tensors format
@@ -62,7 +61,7 @@ Optional parameters can be passed to the function using key-value pairs. For mor
 Available options concern the choice of SDP solver (*solver*), which of the fitting routines to employ (*pipeline*), the number of voxels to be fitted simultaneously (*nvox*), whether or not to use parallel computations (*parallel*), and possible indexes of measurements to exclude from the fitting (*ind*).
 
 ### pipeline
-The pipeline options are constructed using SDPdc, NLLSdc, m)-check, and SDPdcm as building blocks. Pre-constructed pipelines can be identified via integers as follows:
+Pre-constructed pipelines can be identified via integers as follows:
 
 - 0 : SDPdc (default)
 - 1 : SDPdc followed by NLLSdc
@@ -70,6 +69,14 @@ The pipeline options are constructed using SDPdc, NLLSdc, m)-check, and SDPdcm a
 - 3 : SDPdc followed by NLLSdc and SDPdcm
 - 4 : SDPdc followed by m)-check and SDPdcm
 - 5 : SDPdc followed by SDPdcm
+- 6: SDPdc±
+- 7: SDPdc± followed by SDPdcm±
+- 8: SDPdc± followed by m)-check and SDPdcm±
+- 9: SDPd
+- 10: SDPd followed by NLLSd
+- 11: SDPd±
+
+where options 9, 10, and 11 perform constrained DTI fitting only. 
 
 For example, the following code
 
@@ -109,7 +116,13 @@ The key word *parallel* allows the user to decide whether to run computations ov
 [model, invariants] = qtiplus_fit(data,btensors,'parallel',0)
 ```
 
+### D0 
 
+If one of the QTI± or DTI± routine is selected (pipeline options 6, 7, 8, 11), a value for the maximum allowed diffusivity needs to be specified (in units of µm^2/ms). By default, this is set to D0 = 3.1 µm^2/ms.  
+
+```matlab
+[model, invariants] = qtiplus_fit(data,btensors,'D0', 3.3)
+```
 
 # Examples
 
@@ -133,10 +146,29 @@ If you use this package in your Research, please cite the following articles:
 	year = {2021}}
 ```
 
+> [2] Boito D, Herberthson M, Dela Haije T, Blystad I, Özarslan E. Diffusivity-limited q-space trajectory imaging. Magnetic Resonance Letters. Volume 3, issue 2, May 2023, Pages 187-196. doi:https://doi.org/10.1016/j.mrl.2022.12.003
 
+```latex
+@article{Boito2021,
+title = {Diffusivity-limited q-space trajectory imaging},
+journal = {Magnetic Resonance Letters},
+volume = {3},
+number = {2},
+pages = {187-196},
+year = {2023},
+note = {Magnetic Resonance in Porous Media},
+issn = {2772-5162},
+doi = {https://doi.org/10.1016/j.mrl.2022.12.003},
+url = {https://www.sciencedirect.com/science/article/pii/S2772516223000013},
+author = {Deneb Boito and Magnus Herberthson and Tom {Dela Haije} and Ida Blystad and Evren Özarslan},
+keywords = {Diffusion, Diffusion MRI, q-space trajectory imaging, QTI, Microstructure, Microscopic anisotropy, QTI+, Constrained},
+abstract = {Q-space trajectory imaging (QTI) allows non-invasive estimation of microstructural features of heterogeneous porous media via diffusion magnetic resonance imaging performed with generalised gradient waveforms. A recently proposed constrained estimation framework, called QTI+, improved QTI’s resilience to noise and data sparsity, thus increasing the reliability of the method by enforcing relevant positivity constraints. In this work we consider expanding the set of constraints to be applied during the fitting of the QTI model. We show that the additional conditions, which introduce an upper bound on the diffusivity values, further improve the retrieved parameters on a publicly available human brain dataset as well as on data acquired from healthy volunteers using a scanner-ready protocol.}
+}
+```
 
 # Contact 
 
 Should you have any question regarding the software, please send an email to
 
 >  deneb.boito@liu.se
+>  deneb.boito@gmail.com

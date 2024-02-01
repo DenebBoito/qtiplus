@@ -35,11 +35,12 @@ function [model,invariants,varargout] = qtiplus_fit(data,btensors,varargin)
 %                                   - 3: SDPdc & NLLSdc & SDPdcm
 %                                   - 4: SPDdc & m-check & SDPdcm
 %                                   - 5: SDPdc & SDPdcm
-%                                   - 6: SDPdcSL
-%                                   - 7: SDPdcSL & SDPdcmSL
-%                                   - 8: SDPdcSL & m-check & SDPdcmSL
+%                                   - 6: SDPdc±
+%                                   - 7: SDPdc± & SDPdcm±
+%                                   - 8: SDPdc± & m-check & SDPdcm±
 %                                   - 9: DTI+ (SDPd)
 %                                   - 10: DTI+ (SDPd & NLLSd)
+%                                   - 11: DTI± (SDPd±)
 %
 %           - nvox:       integer indicating how many voxel to process at
 %                         once (default: 50). a warning: from experience,
@@ -207,33 +208,38 @@ switch pipeline
         model = qtip_pipe_SDPdcm(model,data,btensors,mask,nvox,mcheckflag,ind,parallel,cvxsolver);
         
     case 6 % SDPdcSL
-        fprintf('Select step: SDPdcSL \n')
+        fprintf('Select step: SDPdc± \n')
         fprintf('Fitting...\n')
         model = qtipm_pipe_SDPdcSL(data,btensors, D0, mask,nvox,ind,parallel,cvxsolver);
         
     case 7 % SDPdcSL & SDPdcmSL
-        fprintf('Select steps: SDPdcSL & SDPdcmSL \n')
+        fprintf('Select steps: SDPdc± & SDPdcm± \n')
         fprintf('Fitting...\n')
         model = qtipm_pipe_SDPdcSL(data,btensors, D0, mask,nvox,ind,parallel,cvxsolver);
         varargout{1} = model;
         model = qtipm_pipe_SDPdcmSL(model,data,btensors, D0, mask,nvox,ind,parallel,cvxsolver);
         
     case 8 % SDPdcSL & m-check & SDPdcmSL
-        fprintf('Select steps: SDPdcSL & SDPdcmSL (with m-check) \n')
+        fprintf('Select steps: SDPdc± & SDPdcm± (with m-check) \n')
         fprintf('Fitting...\n')
         [model, varargout{1}]= qtipm_pipe_SDPdcSL_SDPdcmSL(data,btensors, D0, mask,nvox,mcheckflag,ind,parallel,cvxsolver);
         
     case 9 % DTI+ (SDP)
-        fprintf('Selected step: DTI+ (SDP) \n')
+        fprintf('Selected step: DTI+ (SDPd) \n')
         fprintf('Fitting...\n')
         model = dtip_pipe_SDPd(data,btensors,mask,nvox,ind,parallel,cvxsolver);
         
     case 10 % DTI+ (SDP & NLLS)
-        fprintf('Selected steps: DTI+ (SDP & NLLS) \n')
+        fprintf('Selected steps: DTI+ (SDPd & NLLSd) \n')
         fprintf('Fitting...\n')
         model = dtip_pipe_SDPd(data,btensors,mask,nvox,ind,parallel,cvxsolver);
         varargout{1} = model;
         model = dtip_pipe_NLLSd(model,data,btensors,mask,ind,parallel);
+
+    case 11 % DTI± (SDP)
+        fprintf('Selected step: DTI± (SDPd±) \n')
+        fprintf('Fitting...\n')
+        model = dtip_pipe_SDPdSL(data,btensors,mask,nvox,ind,parallel,cvxsolver);
          
 end
 
