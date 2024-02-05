@@ -1,6 +1,6 @@
 # QTI+ & QTI±: Matlab Implementation
 
-This repository contains the Matab implementation of the routines used in the papers [Q-space trajectory imaging with positivity constraints (QTI+)] (https://www.sciencedirect.com/science/article/pii/S1053811921004754) by Herberthson et. al., and [Diffusivity-limited q-space trajectory imaging](https://www.sciencedirect.com/science/article/pii/S2772516223000013?via%3Dihub) by Boito et al..  Here you will find information regarding the installation and basic usage of the library. For details regarding the methods, and for their nomenclature, we refer you to the papers.
+This repository contains the Matab implementation of the routines used in the papers [Q-space trajectory imaging with positivity constraints (QTI+)](https://www.sciencedirect.com/science/article/pii/S1053811921004754) by Herberthson et. al., and [Diffusivity-limited q-space trajectory imaging](https://www.sciencedirect.com/science/article/pii/S2772516223000013?via%3Dihub) by Boito et al..  Here you will find information regarding the installation and basic usage of the library. For details regarding the methods, and for their nomenclature, we refer you to the papers.
 
 In what follows, you will find how to quickly start using the software for analysing your data. For more details and information, and for examples on how to use the softare, please consult the user guide.
 
@@ -88,6 +88,14 @@ will fit the data with SDPdc, NLLSdc, m)-check, and SDPdcm.
 
 As default, only SDPdc is performed. This choice is dictated by the excellent results obtainable with this step alone, and by computational considerations.
 
+### D0 
+
+If one of the QTI± (or DTI±) routines is selected (pipeline options 6, 7, 8, 11), a value for the maximum allowed diffusivity needs to be specified (in units of µm^2/ms). By default, this is set to D0 = 3.1 µm^2/ms.  
+
+```matlab
+[model, invariants] = qtiplus_fit(data,btensors,'D0', 3.3)
+```
+
 ### solver
 
 As mentioned above, we suggest using Mosek over SDPT3. This mostly concerns speed performance, as the final results should not depend on the adopted solver. By default, QTI+ will try to use Mosek, and if not available will resource to SDPT3. However, should you have both solvers available and still prefer SDPT3 over Mosek, there is chance to enforce this choice via the keyword *solver* in the following fashion:
@@ -114,14 +122,6 @@ The key word *parallel* allows the user to decide whether to run computations ov
 
 ```matlab
 [model, invariants] = qtiplus_fit(data,btensors,'parallel',0)
-```
-
-### D0 
-
-If one of the QTI± or DTI± routine is selected (pipeline options 6, 7, 8, 11), a value for the maximum allowed diffusivity needs to be specified (in units of µm^2/ms). By default, this is set to D0 = 3.1 µm^2/ms.  
-
-```matlab
-[model, invariants] = qtiplus_fit(data,btensors,'D0', 3.3)
 ```
 
 # Examples
@@ -160,10 +160,22 @@ note = {Magnetic Resonance in Porous Media},
 issn = {2772-5162},
 doi = {https://doi.org/10.1016/j.mrl.2022.12.003},
 url = {https://www.sciencedirect.com/science/article/pii/S2772516223000013},
-author = {Deneb Boito and Magnus Herberthson and Tom {Dela Haije} and Ida Blystad and Evren Özarslan},
-keywords = {Diffusion, Diffusion MRI, q-space trajectory imaging, QTI, Microstructure, Microscopic anisotropy, QTI+, Constrained},
-abstract = {Q-space trajectory imaging (QTI) allows non-invasive estimation of microstructural features of heterogeneous porous media via diffusion magnetic resonance imaging performed with generalised gradient waveforms. A recently proposed constrained estimation framework, called QTI+, improved QTI’s resilience to noise and data sparsity, thus increasing the reliability of the method by enforcing relevant positivity constraints. In this work we consider expanding the set of constraints to be applied during the fitting of the QTI model. We show that the additional conditions, which introduce an upper bound on the diffusivity values, further improve the retrieved parameters on a publicly available human brain dataset as well as on data acquired from healthy volunteers using a scanner-ready protocol.}
-}
+author = {Deneb Boito and Magnus Herberthson and Tom {Dela Haije} and Ida Blystad and Evren Özarslan}}
+```
+
+> [3] Deneb Boito, Magnus Herberthson, Tom Dela Haije, Evren Özarslan, Applying positivity constraints to q-space trajectory imaging: The QTI+ implementation, SoftwareX, Volume 18, 2022, 101030, ISSN 2352-7110, doi:https://doi.org/10.1016/j.softx.2022.101030.
+
+```latex
+@article{Boito2022,
+title = {Applying positivity constraints to q-space trajectory imaging: The QTI+ implementation},
+journal = {SoftwareX},
+volume = {18},
+pages = {101030},
+year = {2022},
+issn = {2352-7110},
+doi = {https://doi.org/10.1016/j.softx.2022.101030},
+url = {https://www.sciencedirect.com/science/article/pii/S2352711022000322},
+author = {Deneb Boito and Magnus Herberthson and Tom {Dela Haije} and Evren Özarslan}}
 ```
 
 # Contact 
@@ -171,4 +183,3 @@ abstract = {Q-space trajectory imaging (QTI) allows non-invasive estimation of m
 Should you have any question regarding the software, please send an email to
 
 >  deneb.boito@liu.se
->  deneb.boito@gmail.com

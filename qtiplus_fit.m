@@ -239,7 +239,7 @@ switch pipeline
     case 11 % DTI± (SDP)
         fprintf('Selected step: DTI± (SDPd±) \n')
         fprintf('Fitting...\n')
-        model = dtip_pipe_SDPdSL(data,btensors,mask,nvox,ind,parallel,cvxsolver);
+        model = dtipm_pipe_SDPdSL(data,btensors,D0,mask,nvox,ind,parallel,cvxsolver);
          
 end
 

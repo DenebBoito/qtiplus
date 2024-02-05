@@ -14,8 +14,8 @@
 % The b-tensors are saved in the "BRAIN_FWF_MERGED_mc_xps.mat"
 
 % load the data and the experimental parameters (xps)
-data = niftiread('BRAIN_FWF_MERGED_mc.nii.gz');
-% data = niftiread('BRAIN_FWF_MERGED_mc.nii');
+% data = niftiread('BRAIN_FWF_MERGED_mc.nii.gz');
+data = niftiread('BRAIN_FWF_MERGED_mc.nii');
 load('BRAIN_FWF_MERGED_mc_xps.mat')
 
 % extract the b-tensors from the xps structure
