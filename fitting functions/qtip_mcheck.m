@@ -32,7 +32,7 @@ cvx_begin sdp quiet
  end
  cvx_end
  
-% feasibility proble in cvx: if solver finds a feasible solution, cvx_optval will be 0
+% feasibility problem in cvx: if solver finds a feasible solution, cvx_optval will be 0
 % otherwise cvx_optval will be +Inf
 if cvx_optval == 0
     out = 0;

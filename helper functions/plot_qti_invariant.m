@@ -11,7 +11,7 @@ slice = round(size(tmp_inv,3)/2);
 % open a figure
 figure()
 
-% for each fit (invariant structure), we plot the QTI main invariants
+% for each fit (invariant structure), we plot the QTI selected invariant
 tmp = [];
 for i = 1:n_fits
     % for each fit (invariant structure) extract the invariant
