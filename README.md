@@ -136,8 +136,6 @@ If you use this package in your Research, please cite the following articles:
 
 > [1] Herberthson M, Boito D, Haije TD, Feragen A, Westin CF, Özarslan E. Q-space trajectory imaging with positivity constraints (QTI+). Neuroimage. 2021 May 21;238:118198. doi: 10.1016/j.neuroimage.2021.118198. Epub ahead of print. PMID: 34029738. 
 
-> [2] Boito D, Herberthson M, Dela Haije T, Özarslan E. Applying positivity constraints to q-space trajectory imaging: the QTI+ implementation. SoftwareX. 2022 March; volume 18. doi: https://doi.org/10.1016/j.softx.2022.101030.
-
 ```latex
 @article{Herberthson2021,
 	author = {Magnus Herberthson and Deneb Boito and Tom {Dela Haije} and Aasa Feragen and Carl-Fredrik Westin and Evren \"Ozarslan},
@@ -147,22 +145,8 @@ If you use this package in your Research, please cite the following articles:
 	volume = {238},
 	year = {2021}}
 ```
-<<<<<<< HEAD
-```latex
-@article{Boito2022,
-	title = {Applying positivity constraints to q-space trajectory imaging: The QTI+ implementation},
-	journal = {SoftwareX},
-	volume = {18},
-	pages = {101030},
-	year = {2022},
-	issn = {2352-7110},
-	doi = {https://doi.org/10.1016/j.softx.2022.101030},
-	url = {https://www.sciencedirect.com/science/article/pii/S2352711022000322},
-	author = {Deneb Boito and Magnus Herberthson and Tom {Dela Haije} and Evren Özarslan}}
-=======
 
 > [2] Boito D, Herberthson M, Dela Haije T, Blystad I, Özarslan E. Diffusivity-limited q-space trajectory imaging. Magnetic Resonance Letters. Volume 3, issue 2, May 2023, Pages 187-196. doi:https://doi.org/10.1016/j.mrl.2022.12.003
-
 ```latex
 @article{Boito2021,
 title = {Diffusivity-limited q-space trajectory imaging},
@@ -176,7 +160,7 @@ issn = {2772-5162},
 doi = {https://doi.org/10.1016/j.mrl.2022.12.003},
 url = {https://www.sciencedirect.com/science/article/pii/S2772516223000013},
 author = {Deneb Boito and Magnus Herberthson and Tom {Dela Haije} and Ida Blystad and Evren Özarslan}}
->>>>>>> qtipm_publish
+
 ```
 
 > [3] Deneb Boito, Magnus Herberthson, Tom Dela Haije, Evren Özarslan, Applying positivity constraints to q-space trajectory imaging: The QTI+ implementation, SoftwareX, Volume 18, 2022, 101030, ISSN 2352-7110, doi:https://doi.org/10.1016/j.softx.2022.101030.
@@ -193,6 +177,8 @@ doi = {https://doi.org/10.1016/j.softx.2022.101030},
 url = {https://www.sciencedirect.com/science/article/pii/S2352711022000322},
 author = {Deneb Boito and Magnus Herberthson and Tom {Dela Haije} and Evren Özarslan}}
 ```
+
+
 
 # Contact 
 
